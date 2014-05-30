@@ -22,6 +22,12 @@
     <script src="http://rawgithub.com/baconjs/bacon.js/master/dist/Bacon.min.js"></script>
     <script src="http://rawgithub.com/baconjs/bacon.model/master/dist/bacon.model.min.js"></script>
 
+  </script>
+
+    <script src="http://meteor.github.io/blaze/blaze-0.1.js"></script>
+    <script src="http://rawgithub.com/baconjs/bacon.js/master/dist/Bacon.min.js"></script>
+    <script src="http://rawgithub.com/baconjs/bacon.model/master/dist/bacon.model.min.js"></script>
+
     <script>
         function blazify(model, name) {
             var b = Blaze.Var(model.get()[name]);
@@ -36,18 +42,6 @@
                 cloned.reverse(); // reverse in-place
             return cloned;
         };
-
-        function viewFactory(component) {
-            var names = blazify(component.model, "names");
-            var ascending = blazify(component.model, "ascending");
-
-            return {
-                helpers: {
-                    order: function () { return ascending.get() ? 'A to Z' : 'Z to A'; },
-                    contacts: function () { return sorted(names.get(), ascending.get()); }
-                }
-            }
-        }
 
         function componentFactory() {
             var model = new Bacon.Model({
@@ -69,6 +63,19 @@
                 }
             }
         };
+
+        function viewFactory(component) {
+            var names = blazify(component.model, "names");
+            var ascending = blazify(component.model, "ascending");
+
+            return {
+                helpers: {
+                    order: function () { return ascending.get() ? 'A to Z' : 'Z to A'; },
+                    contacts: function () { return sorted(names.get(), ascending.get()); }
+                }
+            }
+        };
+
 
         var component = componentFactory();
         var view = viewFactory(component);

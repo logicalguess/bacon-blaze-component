@@ -32,18 +32,6 @@
             return cloned;
         };
 
-        function viewFactory(component) {
-            var names = blazify(component.model, "names");
-            var ascending = blazify(component.model, "ascending");
-
-            return {
-                helpers: {
-                    order: function () { return ascending.get() ? 'A to Z' : 'Z to A'; },
-                    contacts: function () { return sorted(names.get(), ascending.get()); }
-                }
-            }
-        }
-
         function componentFactory() {
             var model = new Bacon.Model({
                 ascending: true,
@@ -64,6 +52,19 @@
                 }
             }
         };
+
+        function viewFactory(component) {
+            var names = blazify(component.model, "names");
+            var ascending = blazify(component.model, "ascending");
+
+            return {
+                helpers: {
+                    order: function () { return ascending.get() ? 'A to Z' : 'Z to A'; },
+                    contacts: function () { return sorted(names.get(), ascending.get()); }
+                }
+            }
+        };
+
 
         var component = componentFactory();
         var view = viewFactory(component);
