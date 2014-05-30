@@ -5,6 +5,9 @@
 3. The component model propagates its changes to the Blaze variables.
 4. Changes to the Blaze variables are only made by this propagation mechanism.
 
+
+Modified example from: http://codepen.io/imslavko/pen/KhAyp .
+
 ![ ](screen1.png) ![ ](screen2.png)
 
 ```
