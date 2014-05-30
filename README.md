@@ -1,5 +1,10 @@
 # Using Bacon and Blaze to implement reactive components
 
+1. The component holds a Bacon model and mutator methods.
+2. The view uses Blaze variables and exposes helpers for the Spacebar template.
+3. The component model propagates its changes to the Blaze variables.
+4. Changes to the Blaze variables are only made by this propagation mechanism.
+
 ![ ](screen1.png) ![ ](screen2.png)
 
 ```
@@ -45,7 +50,9 @@
                     "Ada Lovelace", "Nikola Tesla" ]
             });
             return {
-                model: model,
+                blazify: function(name) {
+                    return blazify(model, name);
+                },
                 toggleOrder: function () { model.lens("ascending").set(! model.get().ascending); },
                 addName: function (evt, tmpl) {
                     var allNames = model.get().names;
@@ -59,8 +66,8 @@
         };
 
         function viewFactory(component) {
-            var names = blazify(component.model, "names");
-            var ascending = blazify(component.model, "ascending");
+            var names = component.blazify("names");
+            var ascending = component.blazify("ascending");
 
             return {
                 helpers: {
@@ -69,7 +76,6 @@
                 }
             }
         };
-
 
         var component = componentFactory();
         var view = viewFactory(component);
