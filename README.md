@@ -16,13 +16,7 @@
            <input type="text" id="new-contact">
            <input type="submit" value="Add">
          </form>
-     </script>
-
-    <script src="http://meteor.github.io/blaze/blaze-0.1.js"></script>
-    <script src="http://rawgithub.com/baconjs/bacon.js/master/dist/Bacon.min.js"></script>
-    <script src="http://rawgithub.com/baconjs/bacon.model/master/dist/bacon.model.min.js"></script>
-
-  </script>
+    </script>
 
     <script src="http://meteor.github.io/blaze/blaze-0.1.js"></script>
     <script src="http://rawgithub.com/baconjs/bacon.js/master/dist/Bacon.min.js"></script>
