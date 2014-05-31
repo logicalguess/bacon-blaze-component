@@ -33,7 +33,10 @@ Modified example from: http://codepen.io/imslavko/pen/KhAyp .
            <input type="text" id="new-contact">
            <input type="submit" value="Add">
          </form>
-    </script>
+
+         <input type="checkbox" id="check1" {{checked}}>
+         <input type="checkbox" id="check2" {{checked}}>
+  </script>
 
     <script src="http://meteor.github.io/blaze/blaze-0.1.js"></script>
     <script src="http://rawgithub.com/baconjs/bacon.js/master/dist/Bacon.min.js"></script>
@@ -48,7 +51,7 @@ Modified example from: http://codepen.io/imslavko/pen/KhAyp .
             }
             else {
                 var b = Blaze.Var(model.get());
-                model.onValue(b, "set");
+                model.log().onValue(b, "set");
                 return b;
             }
         }
@@ -64,13 +67,13 @@ Modified example from: http://codepen.io/imslavko/pen/KhAyp .
         function binder(component, name, type) {
             return function(ev) {
                 var val = null;
-                if (type = "switch") {
+                if (type === "switch") {
                    val = $(ev.target).is(":checked");
                 }
-                if (type = "enter" && ev.keyCode === 13) {
+                else if (type === "enter" && ev.keyCode === 13) {
                     val = $(ev.target).val();
                 }
-                if(!type || val == null) {
+                if(val == null) {
                    val = $(ev.target).val();
                 }
                 component.set(name, val);
@@ -78,7 +81,7 @@ Modified example from: http://codepen.io/imslavko/pen/KhAyp .
         }
 
         function componentFactory() {
-            var model = new Bacon.Model({
+            var model = new Bacon.Model({check:false,
                 ascending: true,
                 names: ["Carl Friedrich Gauss", "Marie Curie",
                     "Grace Hopper", "Claude Shannon",
@@ -112,7 +115,8 @@ Modified example from: http://codepen.io/imslavko/pen/KhAyp .
                 helpers: {
                     model: function() { return model.get(); },
                     order: function () { return model.get().ascending ? 'A to Z' : 'Z to A'; },
-                    contacts: function () { return sorted(model.get().names, model.get().ascending); }
+                    contacts: function () { return sorted(model.get().names, model.get().ascending); },
+                    checked: function() { return model.get().check ? "checked" : ""}
                 }
             }
         };
@@ -127,7 +131,9 @@ Modified example from: http://codepen.io/imslavko/pen/KhAyp .
         Template.main.events({
             'click #toggle-order': component.toggleOrder,
             'submit form': component.addName,
-            'keyup #list-name': binder(component, "listName")
+            'keyup #list-name': binder(component, "listName"),
+            'change #check1': binder(component, "check", "switch"),
+            'change #check2': binder(component, "check", "switch")
         });
     </script>
 

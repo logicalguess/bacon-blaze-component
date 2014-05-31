@@ -2,22 +2,22 @@
 
     <!-- The template named "main" automatically renders into the document body -->
     <script type="text/spacebars" name="main">
-<p><b>Contact List:</b> <input type="text" id="list-name"/></p>
-<p><b>Contact List Echo: </b> {{model.listName}}</p>
-<p><b>Sorting:</b> <button id="toggle-order">{{order}}</button></p>
-<p><b>Count: </b>{{model.names.length}}</p>
-<b> Names:</b>
- {{#each contacts}}
-   <div>{{.}}</div>
- {{/each}}
+        <p><b>Contact List:</b> <input type="text" id="list-name"/></p>
+        <p><b>Contact List Echo: </b> {{model.listName}}</p>
+        <p><b>Sorting:</b> <button id="toggle-order">{{order}}</button></p>
+        <p><b>Count: </b>{{model.names.length}}</p>
+        <b> Names:</b>
+         {{#each contacts}}
+           <div>{{.}}</div>
+         {{/each}}
 
- <form>
-   <input type="text" id="new-contact">
-   <input type="submit" value="Add">
- </form>
+         <form>
+           <input type="text" id="new-contact">
+           <input type="submit" value="Add">
+         </form>
 
- <input type="checkbox" id="check1" {{checked}}>
- <input type="checkbox" id="check2" {{checked}}>
+         <input type="checkbox" id="check1" {{checked}}>
+         <input type="checkbox" id="check2" {{checked}}>
   </script>
 
     <script src="http://meteor.github.io/blaze/blaze-0.1.js"></script>
