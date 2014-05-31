@@ -1,21 +1,30 @@
 # Using Bacon and Blaze to implement reactive components
 
 1. The component holds a Bacon model and mutator methods.
-2. The view uses Blaze variables and exposes helpers for the Spacebar template.
-3. The component model propagates its changes to the Blaze variables.
+2. The view uses Blaze variable(s) and exposes helpers for the Spacebar template.
+3. The component model propagates its changes to the Blaze variable(s).
 4. Changes to the Blaze variables are only made by this propagation mechanism.
+5. Blaze supports model-to-view binding out-of-the-box
+6. For view-to-model or 2-way bindings it is easy to map events to Bacon model lens
+
+It is also possible to use Bacon's bindings.
 
 
 Modified example from: http://codepen.io/imslavko/pen/KhAyp .
 
 ![ ](screen1.png) ![ ](screen2.png)
+![ ](screen3.png) ![ ](screen4.png)
 
 ```
 <head>
 
     <!-- The template named "main" automatically renders into the document body -->
     <script type="text/spacebars" name="main">
-        <p><b>Contacts</b> <button id="toggle-order">{{order}}</button></p>
+        <p><b>Contact List:</b> <input type="text" id="list-name"/></p>
+        <p><b>Contact List Echo: </b> {{model.listName}}</p>
+        <p><b>Sorting:</b> <button id="toggle-order">{{order}}</button></p>
+        <p><b>Count: </b>{{model.names.length}}</p>
+        <b> Names:</b>
          {{#each contacts}}
            <div>{{.}}</div>
          {{/each}}
@@ -32,9 +41,16 @@ Modified example from: http://codepen.io/imslavko/pen/KhAyp .
 
     <script>
         function blazify(model, name) {
-            var b = Blaze.Var(model.get()[name]);
-            model.lens(name).onValue(b, "set");
-            return b;
+            if (name) {
+                var b = Blaze.Var(model.get()[name]);
+                model.lens(name).onValue(b, "set");
+                return b;
+            }
+            else {
+                var b = Blaze.Var(model.get());
+                model.onValue(b, "set");
+                return b;
+            }
         }
 
         function sorted (arr, asc) {
@@ -44,6 +60,22 @@ Modified example from: http://codepen.io/imslavko/pen/KhAyp .
                 cloned.reverse(); // reverse in-place
             return cloned;
         };
+
+        function binder(component, name, type) {
+            return function(ev) {
+                var val = null;
+                if (type = "switch") {
+                   val = $(ev.target).is(":checked");
+                }
+                if (type = "enter" && ev.keyCode === 13) {console.log("ENTER")
+                    val = $(ev.target).val();
+                }
+                if(!type || val == null) {
+                   val = $(ev.target).val();
+                }
+                component.set(name, val);
+            }
+        }
 
         function componentFactory() {
             var model = new Bacon.Model({
@@ -55,6 +87,9 @@ Modified example from: http://codepen.io/imslavko/pen/KhAyp .
             return {
                 blazify: function(name) {
                     return blazify(model, name);
+                },
+                set: function(name, val) {
+                    model.lens(name).set(val);
                 },
                 toggleOrder: function () { model.lens("ascending").set(! model.get().ascending); },
                 addName: function (evt, tmpl) {
@@ -69,13 +104,15 @@ Modified example from: http://codepen.io/imslavko/pen/KhAyp .
         };
 
         function viewFactory(component) {
-            var names = component.blazify("names");
-            var ascending = component.blazify("ascending");
+            //var names = component.blazify("names");
+            //var ascending = component.blazify("ascending");
+            var model = component.blazify();
 
             return {
                 helpers: {
-                    order: function () { return ascending.get() ? 'A to Z' : 'Z to A'; },
-                    contacts: function () { return sorted(names.get(), ascending.get()); }
+                    model: function() { return model.get(); },
+                    order: function () { return model.get().ascending ? 'A to Z' : 'Z to A'; },
+                    contacts: function () { return sorted(model.get().names, model.get().ascending); }
                 }
             }
         };
@@ -89,9 +126,11 @@ Modified example from: http://codepen.io/imslavko/pen/KhAyp .
 
         Template.main.events({
             'click #toggle-order': component.toggleOrder,
-            'submit form': component.addName
+            'submit form': component.addName,
+            'keyup #list-name': binder(component, "listName")
         });
     </script>
 
 </head>
+
 ```
