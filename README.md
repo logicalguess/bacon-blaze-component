@@ -5,7 +5,7 @@
 3. The component model propagates its changes to the Blaze variable(s).
 4. Changes to the Blaze variables are only made by this propagation mechanism.
 5. Blaze supports model-to-view binding out-of-the-box
-6. For view-to-model or 2-way bindings it is easy to map events to Bacon model lens
+6. For view-to-model or 2-way bindings it is easy to map events to Bacon model lenses
 
 It is also possible to use Bacon's bindings.
 
