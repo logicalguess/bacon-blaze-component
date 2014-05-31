@@ -67,7 +67,7 @@ Modified example from: http://codepen.io/imslavko/pen/KhAyp .
                 if (type = "switch") {
                    val = $(ev.target).is(":checked");
                 }
-                if (type = "enter" && ev.keyCode === 13) {console.log("ENTER")
+                if (type = "enter" && ev.keyCode === 13) {
                     val = $(ev.target).val();
                 }
                 if(!type || val == null) {
